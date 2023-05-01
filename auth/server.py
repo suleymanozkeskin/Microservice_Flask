@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from models import User,db  
 import rsa
 
+
 def read_key_file(file_path):
     with open(file_path, 'r') as f:
         return f.read()
@@ -24,6 +25,7 @@ database_url = (
     f"postgresql://{os.environ.get('DATABASE_USERNAME')}:{os.environ.get('DATABASE_PASSWORD')}"
     f"@{os.environ.get('DATABASE_HOSTNAME')}:{os.environ.get('DATABASE_PORT')}/{os.environ.get('DATABASE_NAME')}"
 )
+
 server.config['SQLALCHEMY_DATABASE_URI'] = database_url
 server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(server)
