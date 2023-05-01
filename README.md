@@ -28,31 +28,43 @@ Follow these steps to set up the project:
 
 1. Clone the repository:
 
+    ```bash
    git clone <https://github.com/suleymanozkeskin/Microservice_Flask.git>
    cd Microservice_Flask/src/auth/
+    ```
 
 2. Create a virtual environment and install the dependencies:
 
+    ```bash
    virtualenv venv
    source venv/bin/activate
    pip install -r requirements.txt
+    ```
 
 3. Build the Docker image:
 
+    ```bash
    docker build -t your-user-name/auth:latest .
+    ```
 
 4. Start the Kubernetes cluster (if using Minikube):
 
+    ```bash
     minikube start
+    ```
 
 5. Apply the Kubernetes manifests:
 
+    ```bash
     cd manifests/
     kubectl apply -f .
+    ```
 
 6. Check the status of the pods:
 
+    ```bash
     kubectl get pods
+    ```
 
 ## Configuration
 
