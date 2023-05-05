@@ -11,21 +11,12 @@ RUN apt-get update \
         libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-
-# Copy the private key and public key files
-COPY private_key.pem /app/
-COPY public_key.pem /app/
-
-
 # Copy requirements.txt and install the dependencies
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-
 # Copy the application files and .env file
 COPY . /app/
-
-
 
 # Expose the port your app runs on
 EXPOSE 5000
@@ -35,7 +26,6 @@ ENV FLASK_APP=server.py
 
 # Run the application
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
-
 ## Build the image
 # docker build -t flask-app:latest .
 
@@ -43,4 +33,8 @@ CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
 
 # docker run -d -p 5000:5000 flask-app:latest
 
-# docker tag 10dacc26d9f7bd0490eddee4c9c915f82f22e03d575e089a601c931866e5d5d4 suleymanozkeskin/auth:latest
+# docker tag 0d3e66d38006448c67fc33cee0115213aab6f54aaab52e5f530543ff389eb363 suleymanozkeskin/auth:latest
+
+# docker push suleymanozkeskin/auth:latest
+
+# docker pull suleymanozkeskin/auth:latest

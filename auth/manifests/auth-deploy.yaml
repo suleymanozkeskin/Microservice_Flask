@@ -1,3 +1,4 @@
+# auth-deploy.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,8 +26,9 @@ spec:
             - containerPort: 5000
           envFrom:
             - configMapRef:
-                name: auth-config
+                name: auth-configmap
             - secretRef:
                 name: auth-secret
-      imagePullSecrets:
-        - name: auth-docker-registry-secret
+          imagePullPolicy: Always
+          
+           

@@ -1,12 +1,10 @@
+# auth-configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: auth-config
+  name: auth-configmap
 data:
   DATABASE_HOSTNAME: "host.minikube.internal"
   DATABASE_PORT: "5432"
-  DATABASE_PASSWORD: "1234"
   DATABASE_USERNAME: "postgres"
-  DATABASE_NAME: "microservice_flask"
-  
- 
+  DATABASE_NAME: "microservice_flask_auth"

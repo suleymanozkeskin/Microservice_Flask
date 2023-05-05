@@ -4,18 +4,7 @@ import datetime
 import os
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from models import User,db  
-import rsa
-
-
-def read_key_file(file_path):
-    with open(file_path, 'r') as f:
-        return f.read()
-
-private_key = rsa.PrivateKey.load_pkcs1(read_key_file("private_key.pem").encode())
-public_key = rsa.PublicKey.load_pkcs1_openssl_pem(read_key_file("public_key.pem").encode())
-
-
+from models import User, db
 load_dotenv()
 
 server = Flask(__name__)
@@ -59,12 +48,12 @@ def register():
     auth = request.authorization
     if not auth:
         return "missing credentials", 401
-    
+
     # check db for existing user
     user = User.query.filter_by(email=auth.username).first()
     if user:
         return "user already exists", 409
-    
+
     # create new user
     new_user = User(email=auth.username, password=auth.password)
     db.session.add(new_user)
@@ -72,12 +61,10 @@ def register():
 
     return createJWT(auth.username, os.environ.get("JWT_SECRET"), True)
 
-
-
-
+# login a user
 @server.route("/login", methods=["POST"])
 def login():
-    auth = request.authorization # Basic Auth header
+    auth = request.authorization  # Basic Auth header
     if not auth:
         return "missing credentials", 401
 
@@ -96,10 +83,8 @@ def login():
             return createJWT(auth.username, os.environ.get("JWT_SECRET"), True)
     else:
         return "invalid credentials", 401
-    
-    
 
-
+# validate a user
 @server.route("/validate", methods=["POST"])
 def validate():
     encoded_jwt = request.headers["Authorization"]
@@ -110,23 +95,26 @@ def validate():
     encoded_jwt = encoded_jwt.split(" ")[1]
 
     try:
-        decoded = jwt.decode(encoded_jwt, public_key, algorithms=["RS256"])
+        decoded = jwt.decode(encoded_jwt, os.environ.get("JWT_SECRET"), algorithms=["HS256"])
     except:
         return "not authorized", 403
 
     return decoded, 200
 
+# create JWT with HS256
+def createJWT(username, secret, authz):
+    return jwt.encode(
+        {
+            "username": username,
+            "exp": datetime.datetime.now(tz=datetime.timezone.utc)
+            + datetime.timedelta(days=1),
+            "iat": datetime.datetime.utcnow(),
+            "admin": authz,
+        },
+        secret,
+        algorithm="HS256",
+    )
 
-def createJWT(username, private_key, authz):
-    payload = {
-        "username": username,
-        "exp": datetime.datetime.now(tz=datetime.timezone.utc)
-        + datetime.timedelta(days=1),
-        "iat": datetime.datetime.utcnow(),
-        "admin": authz,
-    }
-    encoded_jwt = jwt.encode(payload, private_key, algorithm="RS256")
-    return encoded_jwt
 
 
 if __name__ == "__main__":
