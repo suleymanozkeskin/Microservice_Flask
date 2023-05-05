@@ -1,0 +1,13 @@
+# postgresql-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-service
+spec:
+  selector:
+    app: postgres  # <-- Change this to match the label in the deployment
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP

@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Update packages and install necessary packages
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && apt-get install -y telnet \
         build-essential \
         libpq-dev \
     && rm -rf /var/lib/apt/lists/*
@@ -34,7 +34,7 @@ CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
 
 # docker run -d -p 5000:5000 flask-app:latest
 
-# docker tag e664fc89553f93b92df7b11fc6f54ebe7765a893932943db71d2c8caa2f26a25 suleymanozkeskin/auth:latest
+# docker tag 97261b7e36f27c4bdb5785568fd14d68022166149b907c0b470ea900785a2e0d  suleymanozkeskin/auth:latest
 
 # docker push suleymanozkeskin/auth:latest
 
@@ -42,6 +42,6 @@ CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
 
 # cd manifests ==> kubectl apply -f ./
 
-# kubectl port-forward pod/auth-76cd58d85b-qwm2z 5000:5000 ==>  by using this command we can access the pod from our local machine as well. Otherwise we can not access the pod from our local machine.
+# kubectl port-forward pod/auth-6b4c657556-4mwdp 5000:5000 ==>  by using this command we can access the pod from our local machine as well. Otherwise we can not access the pod from our local machine.
 
 
