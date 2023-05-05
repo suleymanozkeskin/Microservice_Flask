@@ -1,13 +1,13 @@
+import time
 from dotenv import load_dotenv
 import jwt
 import datetime
 import os
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
+import psycopg2
 from models import User, db
 load_dotenv()
-
-server = Flask(__name__)
 
 # config
 database_url = (
@@ -15,6 +15,18 @@ database_url = (
     f"@{os.environ.get('DATABASE_HOSTNAME')}:{os.environ.get('DATABASE_PORT')}/{os.environ.get('DATABASE_NAME')}"
 )
 
+def connect_to_db():
+    try:
+        conn = psycopg2.connect(database_url)
+        conn.close()
+        return True
+    except psycopg2.OperationalError:
+        return False
+
+server = Flask(__name__)
+
+
+# config 
 server.config['SQLALCHEMY_DATABASE_URI'] = database_url
 server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(server)
@@ -117,7 +129,15 @@ def createJWT(username, secret, authz):
 
 
 
-if __name__ == "__main__":
+def main():
+    while not connect_to_db():
+        print("Waiting for database connection...")
+        time.sleep(3)
+
+    print("Database connected. Running app.")
     with server.app_context():
         db.create_all()
     server.run(host="0.0.0.0", port=5000)
+
+if __name__ == "__main__":
+    main()
