@@ -38,3 +38,9 @@ CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
 # docker push suleymanozkeskin/auth:latest
 
 # docker pull suleymanozkeskin/auth:latest
+
+# cd manifests ==> kubectl apply -f ./
+
+# kubectl port-forward pod/auth-76cd58d85b-qwm2z 5000:5000 ==>  by using this command we can access the pod from our local machine as well. Otherwise we can not access the pod from our local machine.
+
+
